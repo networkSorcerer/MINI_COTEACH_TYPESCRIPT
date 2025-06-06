@@ -1,21 +1,33 @@
 import React, { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import useExchangeToken from "../../hooks/useExchangeToken";
 
 const CallbackPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { mutate: exchangeToken } = useExchangeToken();
 
   useEffect(() => {
     const code = searchParams.get("code");
-    if (code) {
+    const codeVerifier = localStorage.getItem("code_verifier");
+
+    if (code && codeVerifier) {
       console.log("Received authorization code:", code);
-      // 토큰 요청 API 호출 등 처리 후, 예: 홈으로 이동
-      navigate("/");
+      exchangeToken(
+        { code, codeVerifier },
+        {
+          onSuccess: () => {
+            navigate("/"); // 토큰 저장 후 이동
+          },
+          onError: (err) => {
+            console.error("Token exchange failed", err);
+          },
+        }
+      );
     } else {
-      // 에러 처리 등
-      console.error("No authorization code found");
+      console.error("Missing authorization code or code_verifier");
     }
-  }, [searchParams, navigate]);
+  }, [searchParams, exchangeToken, navigate]);
 
   return <div>Loading...</div>;
 };
