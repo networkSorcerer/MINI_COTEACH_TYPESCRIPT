@@ -1,0 +1,51 @@
+.playlist-container {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 10px;
+}
+
+.playlist-card {
+  width: 200px;
+  background: #181818;
+  border-radius: 8px;
+  padding: 10px;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease;
+}
+
+.playlist-card:hover {
+  transform: scale(1.05);
+}
+
+.playlist-image {
+  width: 100%;
+  border-radius: 4px;
+}
+
+.playlist-info {
+  margin-top: 8px;
+}
+
+.playlist-name {
+  font-weight: bold;
+  font-size: 14px;
+  margin: 0;
+}
+
+.playlist-tracks {
+  font-size: 12px;
+  color: #b3b3b3;
+  margin: 4px 0 0 0;
+}
+
+/* Scrollbar custom for Chrome */
+.playlist-container::-webkit-scrollbar {
+  height: 8px;
+}
+.playlist-container::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}

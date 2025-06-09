@@ -15,7 +15,7 @@ const Layout = styled('div')({
   padding: '8px',
 });
 const Sidebar = styled('div')(({ theme }) => ({
-  width: '260px',
+  width: '320px',
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -60,10 +60,13 @@ const LibraryBox = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   color: theme.palette.text.primary,
   width: '100%',
-  height: '100%',
+  height: '100%', // 기존 유지
   padding: '8px',
   marginBottom: '8px',
   marginRight: '8px',
+  display: 'flex',
+  flexDirection: 'column', // 세로로
+  overflow: 'hidden', // 자식 스크롤 제한
 }));
 
 const AppLayout = () => {
