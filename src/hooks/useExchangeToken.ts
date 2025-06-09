@@ -1,16 +1,16 @@
-import { useMutation } from "@tanstack/react-query";
-import { exchangeToken } from "../apis/authApi";
-import { ExchangeTokenResponse } from "../models/auth";
-
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { exchangeToken } from '../apis/authApi';
+import { ExchangeTokenResponse } from '../models/auth';
 const useExchangeToken = () => {
-  return useMutation<
-    ExchangeTokenResponse,
-    Error,
-    { code: string; codeVerifier: string }
-  >({
+  const queryClient = useQueryClient();
+
+  return useMutation<ExchangeTokenResponse, Error, { code: string; codeVerifier: string }>({
     mutationFn: ({ code, codeVerifier }) => exchangeToken(code, codeVerifier),
     onSuccess: (data) => {
-      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem('access_token', data.access_token);
+      queryClient.invalidateQueries({
+        queryKey: ['current-user-profile'],
+      });
     },
   });
 };

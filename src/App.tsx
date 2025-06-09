@@ -37,7 +37,7 @@ function App() {
           <Route path="playlist/:id" element={<PlaylistDetailPage />}></Route>
           <Route path="playlist" element={<PlaylistPage />}></Route>
         </Route>
-        <Route path="/callback" element={<CallbackPage />} />
+        {/* <Route path="/callback" element={<CallbackPage />} /> */}
       </Routes>
     </Suspense>
   );
