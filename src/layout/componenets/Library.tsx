@@ -21,13 +21,13 @@ const StyledListItem = styled('li')({
   cursor: 'pointer',
   transition: 'background-color 0.2s ease',
   '&:hover': {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#555',
   },
 });
 
 const Library = () => {
   const { data } = useGetCurrentUserPlaylists({ limit: 10, offset: 0 });
-
+  console.log('ddd', data);
   return (
     <StyledList>
       {data?.items.length === 0 ? (
