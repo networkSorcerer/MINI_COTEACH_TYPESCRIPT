@@ -1,35 +1,28 @@
-import React, { useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import useExchangeToken from "../../hooks/useExchangeToken";
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useExchangeToken from '../../hooks/useExchangeToken';
 
 const CallbackPage = () => {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get('code');
+  const codeVerifier = localStorage.getItem('code_verifier');
   const { mutate: exchangeToken } = useExchangeToken();
 
   useEffect(() => {
-    const code = searchParams.get("code");
-    const codeVerifier = localStorage.getItem("code_verifier");
-
     if (code && codeVerifier) {
-      console.log("Received authorization code:", code);
       exchangeToken(
         { code, codeVerifier },
         {
           onSuccess: () => {
-            navigate("/"); // 토큰 저장 후 이동
-          },
-          onError: (err) => {
-            console.error("Token exchange failed", err);
+            navigate('/'); // 토큰 교환 후 홈으로 이동
           },
         }
       );
-    } else {
-      console.error("Missing authorization code or code_verifier");
     }
-  }, [searchParams, exchangeToken, navigate]);
+  }, [code, codeVerifier, exchangeToken, navigate]);
 
-  return <div>Loading...</div>;
+  return <div>토큰 처리 중...</div>;
 };
 
 export default CallbackPage;
