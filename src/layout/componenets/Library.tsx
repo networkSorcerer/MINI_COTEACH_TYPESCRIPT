@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import EmptyPlaylist from './EmptyPlaylist';
 import useGetCurrentUserPlaylists from '../../hooks/useGetCurrentUserPlaylists';
 import './Library.css'; // 스타일 따로 작성 (아래 참고)
 import { Box, styled, Typography } from '@mui/material';
+import LoadingScreen from '../../common/components/LoadingScreen';
+import ErrorMessage from '../../common/components/ErrorMessage';
+import PlayList from './PlayList';
+import useGetCurrentUserProfile from '../../hooks/useGetCurrentUserProfile';
+import { useInView } from 'react-intersection-observer';
 
 const StyledList = styled('ul')({
   listStyle: 'none', // 기본 점 없애기
@@ -12,41 +17,41 @@ const StyledList = styled('ul')({
   overflowY: 'auto', // 세로 스크롤 가능하게
 });
 
-const StyledListItem = styled('li')({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '10px',
-  padding: '8px 12px',
-  borderRadius: '8px',
-  cursor: 'pointer',
-  transition: 'background-color 0.2s ease',
-  '&:hover': {
-    backgroundColor: '#555',
-  },
-});
-
 const Library = () => {
-  const { data } = useGetCurrentUserPlaylists({ limit: 10, offset: 0 });
+  const { ref, inView } = useInView();
+
+  const { data, isLoading, error, hasNextPage, isFetchingNextPage, fetchNextPage } = useGetCurrentUserPlaylists({
+    limit: 10,
+    offset: 0,
+  });
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView]);
   console.log('ddd', data);
+  const { data: user } = useGetCurrentUserProfile();
+  if (!user) return <EmptyPlaylist />;
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+  if (error) {
+    return <ErrorMessage errorMessage={error.message} />;
+  }
   return (
-    <StyledList>
-      {data?.items.length === 0 ? (
-        <li>
-          <Typography variant="body2">플레이리스트가 없습니다.</Typography>
-        </li>
+    <div>
+      {!data || data?.pages[0].total === 0 ? (
+        <EmptyPlaylist />
       ) : (
-        data?.items.map((playlist) => (
-          <StyledListItem key={playlist.id}>
-            <img
-              src={playlist.images?.[0]?.url || 'https://via.placeholder.com/50'}
-              alt={playlist.name}
-              style={{ width: '50px', height: '50px', borderRadius: '4px' }}
-            />
-            <Typography variant="body2">{playlist.name}</Typography>
-          </StyledListItem>
-        ))
+        <StyledList>
+          {data?.pages.map((page, index) => (
+            <PlayList playlists={page.items} key={index} />
+          ))}
+          <div ref={ref}>{isFetchingNextPage && <LoadingScreen />}</div>
+        </StyledList>
       )}
-    </StyledList>
+    </div>
   );
 };
 
