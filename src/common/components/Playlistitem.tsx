@@ -6,6 +6,7 @@ interface PlaylistItemProps {
   name: string;
   artistName: string | null;
   id: string;
+  handleClick: (id: string) => void;
 }
 
 const PlaylistitemContainer = styled(Box)(({ theme }) => ({
@@ -31,9 +32,9 @@ const PlaylistName = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.primary,
 }));
 
-const Playlistitem = ({ image, name, artistName, id }: PlaylistItemProps) => {
+const Playlistitem = ({ image, name, artistName, id, handleClick }: PlaylistItemProps) => {
   return (
-    <PlaylistitemContainer>
+    <PlaylistitemContainer onClick={() => handleClick(id)}>
       <ListItemAvatar>{image ? <PlaylistAvatar src={image} alt={name} /> : 'No image'}</ListItemAvatar>
       <ListItemText
         primary={<PlaylistName variant="body1">{name}</PlaylistName>}

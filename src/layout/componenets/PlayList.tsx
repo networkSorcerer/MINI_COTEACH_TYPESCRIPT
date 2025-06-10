@@ -2,6 +2,7 @@ import { styled, Typography } from '@mui/material';
 import React from 'react';
 import { SimplifiedPlaylist } from '../../models/playlist';
 import Playlistitem from '../../common/components/Playlistitem';
+import { useNavigate } from 'react-router-dom';
 
 // Spotify Playlist item type 지정 (API 응답 형태 기준으로)
 interface PlaylistItem {
@@ -29,10 +30,15 @@ const StyledListItem = styled('li')({
 });
 
 const PlayList = ({ playlists }: PlayListProps) => {
+  const navigate = useNavigate();
+  const handleClick = (id: string) => {
+    navigate(`/playlist/${id}`);
+  };
   return (
     <>
       {playlists.map((item) => (
         <Playlistitem
+          handleClick={handleClick}
           name={item.name || ''}
           image={(item.images && item.images[0]?.url) || null}
           id={item.id || ''}

@@ -1,57 +1,67 @@
-import React, { useEffect } from 'react';
-import EmptyPlaylist from './EmptyPlaylist';
+import React, { useEffect, useRef } from 'react';
+import { useInView } from 'react-intersection-observer';
+import { styled } from '@mui/material';
 import useGetCurrentUserPlaylists from '../../hooks/useGetCurrentUserPlaylists';
-import './Library.css'; // 스타일 따로 작성 (아래 참고)
-import { Box, styled, Typography } from '@mui/material';
 import LoadingScreen from '../../common/components/LoadingScreen';
 import ErrorMessage from '../../common/components/ErrorMessage';
+import EmptyPlaylist from './EmptyPlaylist';
 import PlayList from './PlayList';
-import useGetCurrentUserProfile from '../../hooks/useGetCurrentUserProfile';
-import { useInView } from 'react-intersection-observer';
 
 const StyledList = styled('ul')({
-  listStyle: 'none', // 기본 점 없애기
-  padding: 0, // 기본 padding 제거
-  margin: 0, // 기본 margin 제거
-  maxHeight: '300px', // 최대 높이 설정 (원하는 크기로)
-  overflowY: 'auto', // 세로 스크롤 가능하게
+  listStyle: 'none',
+  padding: 0,
+  margin: 0,
+  overflowY: 'auto',
+  maxHeight: '400px',
+  /* 스크롤바 숨기기 */
+  /* 1) WebKit 기반 브라우저 (Chrome, Safari) */
+  '&::-webkit-scrollbar': {
+    display: 'none',
+  },
+  /* 2) Firefox */
+  scrollbarWidth: 'none',
+  /* 3) IE, Edge */
+  '-ms-overflow-style': 'none',
 });
 
 const Library = () => {
-  const { ref, inView } = useInView();
+  const listRef = useRef<HTMLUListElement>(null);
+  // rootElement를 스크롤 컨테이너로 지정
+  const { ref: sentinelRef, inView } = useInView({
+    root: listRef.current,
+    rootMargin: '0px',
+    threshold: 0.1,
+  });
 
   const { data, isLoading, error, hasNextPage, isFetchingNextPage, fetchNextPage } = useGetCurrentUserPlaylists({
     limit: 10,
     offset: 0,
   });
+
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [inView]);
-  console.log('ddd', data);
-  const { data: user } = useGetCurrentUserProfile();
-  if (!user) return <EmptyPlaylist />;
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
-  if (error) {
-    return <ErrorMessage errorMessage={error.message} />;
-  }
+  if (isLoading) return <LoadingScreen />;
+  if (error) return <ErrorMessage errorMessage={error.message} />;
+
+  const pages = data?.pages ?? [];
+  const totalItems = pages[0]?.total ?? 0;
+  if (totalItems === 0) return <EmptyPlaylist />;
+
   return (
-    <div>
-      {!data || data?.pages[0].total === 0 ? (
-        <EmptyPlaylist />
-      ) : (
-        <StyledList>
-          {data?.pages.map((page, index) => (
-            <PlayList playlists={page.items} key={index} />
-          ))}
-          <div ref={ref}>{isFetchingNextPage && <LoadingScreen />}</div>
-        </StyledList>
+    <StyledList ref={listRef}>
+      {pages.map((page, pageIndex) => page.items.map((pl) => <PlayList key={pl.id} playlists={[pl]} />))}
+      {/* 스크롤 끝에서 이 div가 보이면 다음 페이지 로드 */}
+      <li ref={sentinelRef} style={{ height: 1 }} />
+      {isFetchingNextPage && (
+        <li>
+          <LoadingScreen />
+        </li>
       )}
-    </div>
+    </StyledList>
   );
 };
 

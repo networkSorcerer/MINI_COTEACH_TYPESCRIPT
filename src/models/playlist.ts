@@ -25,3 +25,10 @@ export interface SimplifiedPlaylist {
   };
   type?: string;
 }
+
+export interface GetPlaylistRequest {
+  playlistId: string;
+  market?: string;
+  fields?: string;
+  additional_types?: string;
+}
