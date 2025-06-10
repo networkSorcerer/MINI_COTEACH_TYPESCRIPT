@@ -57,7 +57,7 @@ export interface PlaylistTrack {
 }
 export type RestrictionReason = 'market' | 'product' | 'explicit';
 export interface Track {
-  album: {
+  album?: {
     album_type: string;
     total_tracks: BigInteger;
     available_markets: string[];
@@ -80,7 +80,7 @@ export interface Track {
       uri: string;
     };
   };
-  artists: {
+  artists?: {
     external_urls: ExternalUrls;
     href: string;
     id: string;
@@ -88,33 +88,33 @@ export interface Track {
     type: string;
     uri: string;
   };
-  available_markets: string[];
-  disc_number: BigInteger;
-  duration_ms: BigInteger;
-  explicit: boolean;
-  external_ids: {
+  available_markets?: string[];
+  disc_number?: BigInteger;
+  duration_ms?: BigInteger;
+  explicit?: boolean;
+  external_ids?: {
     isrc: string;
     ean: string;
     upc: string;
   };
-  external_urls: ExternalUrls;
-  href: string;
-  id: string;
-  is_playable: boolean;
-  linked_from: Object;
-  restrictions: {
+  external_urls?: ExternalUrls;
+  href?: string;
+  id?: string;
+  is_playable?: boolean;
+  linked_from?: Track;
+  restrictions?: {
     reason: string;
   };
-  name: string;
-  popularity: BigInteger;
-  preview_url: string | null;
-  track_number: BigInteger;
-  type: string;
-  uri: string;
-  is_local: boolean;
+  name?: string;
+  popularity?: BigInteger;
+  preview_url?: string | null;
+  track_number?: BigInteger;
+  type?: 'track';
+  uri?: string;
+  is_local?: boolean;
 }
 export interface Episode {
-  audio_preview_url: string | null;
+  //   audio_preview_url: string | null;
   description: string;
   html_description: string;
   duration_ms: BigInteger;
@@ -123,7 +123,7 @@ export interface Episode {
   external_urls: ExternalUrls;
   href: string;
   id: string;
-  images: Image;
+  images: Image[];
   is_externally_hosted: boolean;
   is_playable: boolean;
   language: string;
@@ -131,13 +131,13 @@ export interface Episode {
   name: string;
   release_date: string;
   release_date_precision: string;
-  resume_point: {
-    fully_played: boolean;
-    resume_position_ms: BigInteger;
+  resume_point?: {
+    fully_played?: boolean;
+    resume_position_ms?: BigInteger;
   };
-  type: string;
+  type: 'episode';
   uri: string;
-  restrictions: {
+  restrictions?: {
     reason: string;
   };
   show: {
@@ -158,8 +158,15 @@ export interface Episode {
     media_type: string;
     name: string;
     publisher: string;
-    type: string;
+    type: 'show';
     uri: string;
     total_episodes: BigInteger;
   };
 }
+
+export interface GetPlaylistItemsRequest extends GetPlaylistRequest {
+  offset?: number;
+  limit?: number;
+}
+
+export type GetPlaylistItemsResponse = ApiResponse<PlaylistTrack>;

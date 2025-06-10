@@ -4,6 +4,7 @@ import useGetPlaylist from '../../hooks/useGetPlaylist';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import { Box, Grid, styled, Typography } from '@mui/material';
 import DefaultImage from '../../layout/componenets/DefaultImage';
+import useGetPlaylistItems from '../../hooks/useGetPlaylistItems';
 
 const PlaylistHeader = styled(Grid)({
   display: 'flex',
@@ -38,8 +39,18 @@ const ResponsiveTypography = styled(Typography)(({ theme }) => ({
 const PlaylistDetailPage = () => {
   const { id } = useParams<string>();
   if (id === undefined) return <Navigate to="/" />;
-  const { data: playlist } = useGetPlaylist({ playlist_id: id });
-  console.log('playlist', playlist);
+  const { data: playlist, isLoading: isPlaylistLoading, error: playlistError } = useGetPlaylist({ playlist_id: id });
+  const {
+    data: playlistItems,
+    isLoading: isPlaylistItemsLoading,
+    error: playlistItemsLoading,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useGetPlaylistItems({ playlist_id: id, limit: 10 });
+
+  console.log('playlist', playlistItems);
+
   return (
     <PlaylistHeader container spacing={7}>
       <ImageGrid item sm={12} md={2}>

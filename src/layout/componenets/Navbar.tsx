@@ -2,6 +2,7 @@ import { Avatar, Box, IconButton, Menu, MenuItem, styled, useMediaQuery } from '
 import React, { useState } from 'react';
 import LoginButton from '../../common/components/LoginButton';
 import useGetCurrentUserProfile from '../../hooks/useGetCurrentUserProfile';
+import { useNavigate } from 'react-router-dom';
 
 const ProfileContainer = styled('div')({
   display: 'flex',
@@ -24,6 +25,7 @@ const ProfileMenuItem = styled(MenuItem)({
 });
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -36,7 +38,7 @@ const Navbar = () => {
 
   const logout = () => {
     localStorage.removeItem('access_token');
-    window.location.reload();
+    window.location.replace('/');
   };
   const { data: userProfile } = useGetCurrentUserProfile();
   return (
