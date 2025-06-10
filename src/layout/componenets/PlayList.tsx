@@ -1,15 +1,18 @@
 import { styled, Typography } from '@mui/material';
 import React from 'react';
+import { SimplifiedPlaylist } from '../../models/playlist';
+import Playlistitem from '../../common/components/Playlistitem';
 
 // Spotify Playlist item type 지정 (API 응답 형태 기준으로)
 interface PlaylistItem {
   id?: string;
   name?: string;
   images?: { url: string }[];
+  artistName: string | null;
 }
 
 interface PlayListProps {
-  playlists: PlaylistItem[];
+  playlists: SimplifiedPlaylist[];
 }
 
 const StyledListItem = styled('li')({
@@ -25,11 +28,20 @@ const StyledListItem = styled('li')({
   },
 });
 
-const PlayList: React.FC<PlayListProps> = ({ playlists }) => {
+const PlayList = ({ playlists }: PlayListProps) => {
   return (
     <>
-      {playlists.map((playlist) => (
-        <StyledListItem key={playlist.id}>
+      {playlists.map((item) => (
+        <Playlistitem
+          name={item.name || ''}
+          image={(item.images && item.images[0]?.url) || null}
+          id={item.id || ''}
+          key={item.id}
+          artistName={'Playlist' + item.owner?.display_name}
+        />
+      ))}
+      {/* {playlists.map((playlist) => (
+        <StyledListItem key={playlist.id} onClick={() => handleClick(id)}>
           <img
             src={playlist.images?.[0]?.url || 'https://via.placeholder.com/50'}
             alt={playlist.name}
@@ -37,7 +49,7 @@ const PlayList: React.FC<PlayListProps> = ({ playlists }) => {
           />
           <Typography variant="body2">{playlist.name}</Typography>
         </StyledListItem>
-      ))}
+      ))} */}
     </>
   );
 };
