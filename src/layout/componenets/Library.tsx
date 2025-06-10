@@ -6,6 +6,7 @@ import LoadingScreen from '../../common/components/LoadingScreen';
 import ErrorMessage from '../../common/components/ErrorMessage';
 import EmptyPlaylist from './EmptyPlaylist';
 import PlayList from './PlayList';
+import useGetCurrentUserProfile from '../../hooks/useGetCurrentUserProfile';
 
 const StyledList = styled('ul')({
   listStyle: 'none',
@@ -43,7 +44,8 @@ const Library = () => {
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
-
+  const { data: user } = useGetCurrentUserProfile();
+  if (!user) return <EmptyPlaylist />;
   if (isLoading) return <LoadingScreen />;
   if (error) return <ErrorMessage errorMessage={error.message} />;
 
