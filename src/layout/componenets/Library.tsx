@@ -13,7 +13,7 @@ const StyledList = styled('ul')({
   padding: 0,
   margin: 0,
   overflowY: 'auto',
-  maxHeight: '400px',
+  maxHeight: '600px',
   /* 스크롤바 숨기기 */
   /* 1) WebKit 기반 브라우저 (Chrome, Safari) */
   '&::-webkit-scrollbar': {
@@ -29,7 +29,7 @@ const Library = () => {
   const listRef = useRef<HTMLUListElement>(null);
   // rootElement를 스크롤 컨테이너로 지정
   const { ref: sentinelRef, inView } = useInView({
-    root: listRef.current,
+    root: listRef.current ?? undefined,
     rootMargin: '0px',
     threshold: 0.1,
   });

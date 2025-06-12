@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import useGetPlaylist from '../../hooks/useGetPlaylist';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
@@ -21,11 +21,12 @@ import { PAGE_LIMIT } from '../../configs/commonConfig';
 import { useInView } from 'react-intersection-observer';
 import LoadingScreen from '../../common/components/LoadingScreen';
 import EmptyPlaylistWithSearch from './components/EmptyPlaylistWithSearch';
+import { relative } from 'path';
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   background: theme.palette.background.paper,
   color: theme.palette.common.white,
-  height: 'calc(100% - 64px)',
+  maxHeight: '300px',
   borderRadius: '8px',
   overflowY: 'auto',
   '&::-webkit-scrollbar': {
@@ -33,13 +34,17 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   },
   msOverflowStyle: 'none', // IE and Edge
   scrollbarWidth: 'none', // Firefox
+  position: 'relative',
 }));
-const PlaylistHeader = styled(Grid)({
+const PlaylistHeader = styled('div')(({ theme }) => ({
+  overflowY: 'auto',
+  position: 'sticky',
   display: 'flex',
   alignItems: 'center',
   background: ' linear-gradient(transparent 0, rgba(0, 0, 0, .5) 100%)',
   padding: '16px',
-});
+  zIndex: 1, // 헤더가 위에 오도록
+}));
 const ImageGrid = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     display: 'flex',
@@ -65,12 +70,17 @@ const ResponsiveTypography = styled(Typography)(({ theme }) => ({
   },
 }));
 const PlaylistDetailPage = () => {
-  const [ref, inView] = useInView();
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const { ref: sentinelRef, inView } = useInView({
+    root: null, // 브라우저 viewport 기준으로 바꿈
+    threshold: 1.0, // 마지막 row가 완전히 보여야 트리거
+  });
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   }, [inView]);
+
   const { id } = useParams<string>();
   console.log('id', id);
   if (id === undefined) return <Navigate to="/" />;
@@ -89,37 +99,37 @@ const PlaylistDetailPage = () => {
 
   return (
     <div>
-      <StyledTableContainer>
-        <PlaylistHeader container spacing={7}>
-          <ImageGrid item sm={12} md={2}>
-            {playlist?.images ? (
-              <AlbumImage src={playlist?.images[0].url} alt="playlist_cover.jpg" />
-            ) : (
-              <DefaultImage>
-                <MusicNoteIcon fontSize="large" />
-              </DefaultImage>
-            )}
-          </ImageGrid>
-          <Grid item sm={12} md={10}>
-            <Box>
-              <ResponsiveTypography variant="h1" color="white">
-                {playlist?.name}
-              </ResponsiveTypography>
+      <PlaylistHeader container spacing={7}>
+        <ImageGrid item sm={12} md={2}>
+          {playlist?.images ? (
+            <AlbumImage src={playlist?.images[0].url} alt="playlist_cover.jpg" />
+          ) : (
+            <DefaultImage>
+              <MusicNoteIcon fontSize="large" />
+            </DefaultImage>
+          )}
+        </ImageGrid>
+        <Grid item sm={12} md={10}>
+          <Box>
+            <ResponsiveTypography variant="h1" color="white">
+              {playlist?.name}
+            </ResponsiveTypography>
 
-              <Box display="flex" alignItems="center">
-                <img src="https://i.scdn.co/image/ab67757000003b8255c25988a6ac314394d3fbf5" width="20px" />
-                <Typography variant="subtitle1" color="white" ml={1} fontWeight={700}>
-                  {playlist?.owner?.display_name ? playlist?.owner.display_name : 'unknown'}
-                </Typography>
-                <Typography variant="subtitle1" color="white">
-                  • {playlist?.tracks?.total} songs
-                </Typography>
-              </Box>
+            <Box display="flex" alignItems="center">
+              <img src="https://i.scdn.co/image/ab67757000003b8255c25988a6ac314394d3fbf5" width="20px" />
+              <Typography variant="subtitle1" color="white" ml={1} fontWeight={700}>
+                {playlist?.owner?.display_name ? playlist?.owner.display_name : 'unknown'}
+              </Typography>
+              <Typography variant="subtitle1" color="white">
+                • {playlist?.tracks?.total} songs
+              </Typography>
             </Box>
-          </Grid>
-        </PlaylistHeader>
+          </Box>
+        </Grid>
+      </PlaylistHeader>
+      <StyledTableContainer ref={containerRef}>
         {playlist?.tracks?.total === 0 ? (
-          <EmptyPlaylistWithSearch />
+          <EmptyPlaylistWithSearch></EmptyPlaylistWithSearch>
         ) : (
           <Table>
             <TableHead>
@@ -141,7 +151,7 @@ const PlaylistDetailPage = () => {
                   />
                 ))
               )}
-              <TableRow sx={{ height: '5px' }} ref={ref} />
+              <TableRow sx={{ height: '5px' }} ref={sentinelRef} />
               {isFetchingNextPage && (
                 <TableRow>
                   <TableCell colSpan={5}>
