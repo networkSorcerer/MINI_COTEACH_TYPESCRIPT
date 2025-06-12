@@ -22,6 +22,8 @@ import { useInView } from 'react-intersection-observer';
 import LoadingScreen from '../../common/components/LoadingScreen';
 import EmptyPlaylistWithSearch from './components/EmptyPlaylistWithSearch';
 import { relative } from 'path';
+import LoginButton from '../../common/components/LoginButton';
+import ErrorMessage from '../../common/components/ErrorMessage';
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   background: theme.palette.background.paper,
@@ -96,7 +98,19 @@ const PlaylistDetailPage = () => {
   } = useGetPlaylistItems({ playlist_id: id, limit: PAGE_LIMIT });
 
   console.log('playlistItems', playlistItems);
-
+  if (playlistItemsLoading || playlistError) {
+    if (playlistItemsLoading?.error.status === 401) {
+      return (
+        <Box display="flex" alignItems="center" justifyContent="center" height="100%" flexDirection="column">
+          <Typography variant="h2" fontWeight={700} mb="20px">
+            다시 로그인 하세요
+          </Typography>
+          <LoginButton />
+        </Box>
+      );
+    }
+    return <ErrorMessage errorMessage="Failed to load" />;
+  }
   return (
     <div>
       <PlaylistHeader container spacing={7}>

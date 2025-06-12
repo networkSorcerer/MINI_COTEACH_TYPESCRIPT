@@ -4,6 +4,8 @@ import AddIcon from '@mui/icons-material/Add';
 import { Typography, Button, styled, Box } from '@mui/material';
 import theme from '../../theme';
 import useCreatePlaylist from '../../hooks/useCreatePlaylist';
+import useGetCurrentUserProfile from '../../hooks/useGetCurrentUserProfile';
+import { getSpotifyAuthUrl } from '../../utils/auth';
 
 const LibraryHeadStyle = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -13,8 +15,13 @@ const LibraryHeadStyle = styled(Box)(({ theme }) => ({
 }));
 const LibraryHead = () => {
   const { mutate: createPlaylist } = useCreatePlaylist();
+  const { data: userProfile } = useGetCurrentUserProfile();
   const handleCreatePlaylist = () => {
-    createPlaylist({ name: '나의 플레이 리스트' });
+    if (userProfile) {
+      createPlaylist({ name: '나의 플레이 리스트' });
+    } else {
+      getSpotifyAuthUrl();
+    }
   };
   return (
     <>
