@@ -21,7 +21,6 @@ import { PAGE_LIMIT } from '../../configs/commonConfig';
 import { useInView } from 'react-intersection-observer';
 import LoadingScreen from '../../common/components/LoadingScreen';
 import EmptyPlaylistWithSearch from './components/EmptyPlaylistWithSearch';
-import { relative } from 'path';
 import LoginButton from '../../common/components/LoginButton';
 import ErrorMessage from '../../common/components/ErrorMessage';
 
@@ -57,7 +56,7 @@ const ImageGrid = styled(Grid)(({ theme }) => ({
 const AlbumImage = styled('img')(({ theme }) => ({
   borderRadius: '8px',
   height: 'auto',
-  width: '80%',
+  width: '50%',
 
   [theme.breakpoints.down('md')]: {
     maxWidth: '200px',
