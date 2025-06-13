@@ -62,13 +62,14 @@ const AlbumImage = styled('img')(({ theme }) => ({
   borderRadius: '8px',
   height: 'auto',
   width: '50%',
-
+  maxHeight: '200px',
   [theme.breakpoints.down('md')]: {
     maxWidth: '200px',
   },
 }));
 
 const StyledDefaultImage = styled(DefaultImage)(({ theme }) => ({
+  maxHeight: '200px',
   borderRadius: '8px',
   height: 'auto',
   width: '50%',
@@ -84,7 +85,7 @@ const StyledDefaultImage = styled(DefaultImage)(({ theme }) => ({
   '& svg': {
     width: '100%', // 부모 크기에 맞게 늘림
     height: '80%',
-    maxWidth: '200px', // 반응형 최대 크기 설정
+    maxWidth: '150px', // 반응형 최대 크기 설정
   },
 }));
 
