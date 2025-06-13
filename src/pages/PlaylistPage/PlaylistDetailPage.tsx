@@ -62,6 +62,13 @@ const AlbumImage = styled('img')(({ theme }) => ({
     maxWidth: '200px',
   },
 }));
+const StyledDefaultImage = styled(DefaultImage)(({ theme }) => ({
+  width: '50%',
+  maxWidth: '200px',
+  borderRadius: '8px',
+  height: 'auto',
+  minHeight: '100px',
+}));
 const ResponsiveTypography = styled(Typography)(({ theme }) => ({
   fontSize: '3rem',
   textAlign: 'left',
@@ -117,9 +124,9 @@ const PlaylistDetailPage = () => {
           {playlist?.images ? (
             <AlbumImage src={playlist?.images[0].url} alt="playlist_cover.jpg" />
           ) : (
-            <DefaultImage>
+            <StyledDefaultImage>
               <MusicNoteIcon fontSize="large" />
-            </DefaultImage>
+            </StyledDefaultImage>
           )}
         </ImageGrid>
         <Grid item sm={12} md={10}>
