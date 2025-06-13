@@ -48,6 +48,7 @@ const EmptyPlaylistWithSearch = () => {
   });
   // 모든 페이지를 가져오기 위해 flatMap으로 바꿈
   const tracks = data?.pages.flatMap((page) => page.tracks?.items) ?? []; //널 병합 연산자라고 불립니다. 이 연산자는 왼쪽의 값이 null 또는 undefined일 때 오른쪽의 값을 반환하고, 그렇지 않으면 왼쪽의 값을 반환합니다.
+  console.log('tracks', tracks);
   const hasResults = tracks.length > 0;
   const handleSearchKeyword = (event: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(event.target.value);

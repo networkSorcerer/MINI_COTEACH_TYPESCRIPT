@@ -3,6 +3,11 @@ import { Box, Button, styled, TableBody, TableCell, TableContainer, TableRow, Ty
 import { useEffect } from 'react';
 import { Track } from '../../../models/playlist';
 import LoadingScreen from '../../../common/components/LoadingScreen';
+import useGetCurrentUserProfile from '../../../hooks/useGetCurrentUserProfile';
+import { getSpotifyAuthUrl } from '../../../utils/auth';
+import useAddMusicToPlaylist from '../../../hooks/useAddMusicToPlaylist';
+import { useParams } from 'react-router-dom';
+
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   background: theme.palette.background.paper,
   color: theme.palette.common.white,
@@ -11,6 +16,7 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
     display: 'none',
   },
 }));
+
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   width: '100%',
   '&:hover': {
@@ -20,26 +26,48 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     borderBottom: 'none',
   },
 }));
+
 const AlbumImage = styled('img')({
   borderRadius: '4px',
   marginRight: '12px',
 });
+
 interface SearchResultListProps {
-  // props 추가
   list: Track[];
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
+  playlistId: string; // playlist_id를 props로 받음
 }
-const SearchResultList = ({ list, hasNextPage, isFetchingNextPage, fetchNextPage }: SearchResultListProps) => {
-  const [ref, inView] = useInView(); // 무한스크롤 옵저버 추가
 
+const SearchResultList = ({
+  list,
+  hasNextPage,
+  isFetchingNextPage,
+  fetchNextPage,
+  playlistId,
+}: SearchResultListProps) => {
+  const [ref, inView] = useInView();
+  const { data: userProfile } = useGetCurrentUserProfile();
+  const { id } = useParams<{ id: string }>();
+  const { mutate: addMusicToPlaylist } = useAddMusicToPlaylist(id);
   useEffect(() => {
-    // fetchNextPage 호출 추가
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [inView, hasNextPage, isFetchingNextPage]);
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const handleAddMusic = (trackUri: string) => {
+    console.log('trackUri', trackUri);
+    if (userProfile) {
+      addMusicToPlaylist({
+        uris: [trackUri],
+        position: 0, // 원하는 위치 지정 (옵션)
+      });
+    } else {
+      getSpotifyAuthUrl();
+    }
+  };
 
   return (
     <StyledTableContainer>
@@ -48,9 +76,7 @@ const SearchResultList = ({ list, hasNextPage, isFetchingNextPage, fetchNextPage
           <StyledTableRow key={track.id}>
             <TableCell>
               <Box display="flex" alignItems="center">
-                <Box>
-                  <AlbumImage src={track.album?.images[0].url} width="40px" />
-                </Box>
+                <AlbumImage src={track.album?.images[0]?.url || ''} width="40px" alt="album cover" />
                 <Box>
                   <Typography fontWeight={700}>{track.name}</Typography>
                   <Typography color="text.secondary">
@@ -61,13 +87,11 @@ const SearchResultList = ({ list, hasNextPage, isFetchingNextPage, fetchNextPage
             </TableCell>
             <TableCell>{track.album?.name}</TableCell>
             <TableCell>
-              <Button>Add</Button>
+              <Button onClick={() => handleAddMusic(track.uri)}>Add</Button>
             </TableCell>
           </StyledTableRow>
         ))}
         <div ref={ref} style={{ height: 1 }}>
-          {' '}
-          // 무한스크롤 영역 추가
           {isFetchingNextPage && <LoadingScreen />}
         </div>
       </TableBody>

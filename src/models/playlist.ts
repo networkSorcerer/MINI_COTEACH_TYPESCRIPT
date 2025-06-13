@@ -179,3 +179,12 @@ export interface CreatePlaylistRequest {
 }
 
 export type SimplifiedEpisode = Omit<Episode, 'show'>;
+
+export interface AddMusicToPlaylistItems {
+  uris?: string[];
+  position?: number;
+}
+
+export interface AddMusicToPlaylistItemsRes {
+  snapshot_id?: string;
+}
