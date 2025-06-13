@@ -37,6 +37,7 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   scrollbarWidth: 'none', // Firefox
   position: 'relative',
 }));
+
 const PlaylistHeader = styled('div')(({ theme }) => ({
   overflowY: 'auto',
   position: 'sticky',
@@ -46,13 +47,17 @@ const PlaylistHeader = styled('div')(({ theme }) => ({
   padding: '16px',
   zIndex: 1, // 헤더가 위에 오도록
 }));
+
 const ImageGrid = styled(Grid)(({ theme }) => ({
+  minHeight: '100px',
+  maxHeight: '130px',
   [theme.breakpoints.down('sm')]: {
     display: 'flex',
     justifyContent: 'center',
     width: '50%',
   },
 }));
+
 const AlbumImage = styled('img')(({ theme }) => ({
   borderRadius: '8px',
   height: 'auto',
@@ -62,13 +67,27 @@ const AlbumImage = styled('img')(({ theme }) => ({
     maxWidth: '200px',
   },
 }));
+
 const StyledDefaultImage = styled(DefaultImage)(({ theme }) => ({
-  width: '50%',
-  maxWidth: '200px',
   borderRadius: '8px',
   height: 'auto',
-  minHeight: '100px',
+  width: '50%',
+  display: 'flex', // 내부 아이콘 중앙 정렬 위해
+  justifyContent: 'center',
+  alignItems: 'center',
+
+  [theme.breakpoints.down('md')]: {
+    maxWidth: '200px',
+  },
+
+  // 내부 svg 아이콘 크기 조절
+  '& svg': {
+    width: '100%', // 부모 크기에 맞게 늘림
+    height: '80%',
+    maxWidth: '200px', // 반응형 최대 크기 설정
+  },
 }));
+
 const ResponsiveTypography = styled(Typography)(({ theme }) => ({
   fontSize: '3rem',
   textAlign: 'left',
@@ -77,12 +96,15 @@ const ResponsiveTypography = styled(Typography)(({ theme }) => ({
     fontSize: '1rem',
   },
 }));
+
 const PlaylistDetailPage = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+
   const { ref: sentinelRef, inView } = useInView({
     root: containerRef.current,
     threshold: 1.0, // 마지막 row가 완전히 보여야 트리거
   });
+
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -91,21 +113,25 @@ const PlaylistDetailPage = () => {
 
   const { id } = useParams<string>();
   console.log('id', id);
+
   if (id === undefined) return <Navigate to="/" />;
 
   const { data: playlist, isLoading: isPlaylistLoading, error: playlistError } = useGetPlaylist({ playlist_id: id });
+
   const {
     data: playlistItems,
     isLoading: isPlaylistItemsLoading,
-    error: playlistItemsLoading,
+    error,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
   } = useGetPlaylistItems({ playlist_id: id, limit: PAGE_LIMIT });
 
   console.log('playlistItems', playlistItems);
-  if (playlistItemsLoading || playlistError) {
-    if (playlistItemsLoading?.error.status === 401) {
+
+  if (error || playlistError) {
+    if (error?.status === 401 || playlistItems === undefined) {
+      //로그인을 안해서 권한 없음 에러라면 로그인 버튼
       return (
         <Box display="flex" alignItems="center" justifyContent="center" height="100%" flexDirection="column">
           <Typography variant="h2" fontWeight={700} mb="20px">
@@ -115,7 +141,7 @@ const PlaylistDetailPage = () => {
         </Box>
       );
     }
-    return <ErrorMessage errorMessage="Failed to load" />;
+    return <ErrorMessage errorMessage="Failed to load" />; // 정말 리스트 가져오기 실패라면 fail to load
   }
   return (
     <div>
@@ -147,6 +173,7 @@ const PlaylistDetailPage = () => {
           </Box>
         </Grid>
       </PlaylistHeader>
+
       <StyledTableContainer ref={containerRef}>
         {playlist?.tracks?.total === 0 ? (
           <EmptyPlaylistWithSearch></EmptyPlaylistWithSearch>

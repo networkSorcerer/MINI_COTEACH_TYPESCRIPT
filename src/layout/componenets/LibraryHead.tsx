@@ -13,6 +13,7 @@ const LibraryHeadStyle = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   padding: '10px',
 }));
+
 const LibraryHead = () => {
   const { mutate: createPlaylist } = useCreatePlaylist();
   const { data: userProfile } = useGetCurrentUserProfile();
