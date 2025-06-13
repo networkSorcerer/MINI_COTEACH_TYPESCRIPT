@@ -51,13 +51,13 @@ const ImageGrid = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     display: 'flex',
     justifyContent: 'center',
-    width: '100%',
+    width: '50%',
   },
 }));
 const AlbumImage = styled('img')(({ theme }) => ({
   borderRadius: '8px',
   height: 'auto',
-  width: '100%',
+  width: '80%',
 
   [theme.breakpoints.down('md')]: {
     maxWidth: '200px',
@@ -74,7 +74,7 @@ const ResponsiveTypography = styled(Typography)(({ theme }) => ({
 const PlaylistDetailPage = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { ref: sentinelRef, inView } = useInView({
-    root: null, // 브라우저 viewport 기준으로 바꿈
+    root: containerRef.current,
     threshold: 1.0, // 마지막 row가 완전히 보여야 트리거
   });
   useEffect(() => {
