@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import useSearchItemsByKeyword from '../../hooks/useSearchItemsByKeyword';
 import { SEARCH_TYPE } from '../../models/search';
-import { Box, InputAdornment, styled, TextField, Typography } from '@mui/material';
-import { BorderColor } from '@mui/icons-material';
+import { Box, InputAdornment, TextField, Typography } from '@mui/material';
 import LoadingScreen from '../../common/components/LoadingScreen';
-import SearchResultList from '../PlaylistPage/components/SearchResulList';
 import SearchIcon from '@mui/icons-material/Search';
+import SearchResultPage from './SearchResultPage';
+import { styled } from '@mui/material/styles'; // ★ 꼭 필요
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   width: '100%',
@@ -15,14 +15,14 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     color: 'white',
   },
   '& .MuiOutlinedInput-root': {
-    '& fielset': {
+    '& fieldset': {
       borderColor: 'transparent',
     },
-    '&:hover fiedset': {
-      BorderColor: 'gray',
+    '&:hover fieldset': {
+      borderColor: 'gray', // CSS 속성 camelCase
     },
     '&.Mui-focused fieldset': {
-      BorderColor: 'grey',
+      borderColor: 'grey', // CSS 속성 camelCase
     },
   },
 }));
@@ -38,17 +38,23 @@ const SearchContainer = styled(Box)({
   msOverflowStyle: 'none',
   scrollbarWidth: 'none',
 });
+
 const SearchPage = () => {
   const [keyword, setKeyword] = useState<string>('');
+
   const { data, error, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = useSearchItemsByKeyword({
     q: keyword,
     type: [SEARCH_TYPE.Track],
   });
+
   const tracks = data?.pages.flatMap((page) => page.tracks?.items) ?? [];
+
   const hasResults = tracks.length > 0;
+
   const handleSearchKeyword = (event: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(event.target.value);
   };
+
   return (
     <SearchContainer>
       <Box display="inline-block">
@@ -77,7 +83,7 @@ const SearchPage = () => {
         {isLoading ? (
           <LoadingScreen />
         ) : hasResults ? (
-          <SearchResultList
+          <SearchResultPage
             list={tracks}
             hasNextPage={hasNextPage}
             isFetchingNextPage={isFetchingNextPage}
