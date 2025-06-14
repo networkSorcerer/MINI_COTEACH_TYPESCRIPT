@@ -20,7 +20,6 @@ const useAddMusicToPlaylist = (playlistIdFromParent?: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['playlist-items', { playlist_id: playlistIdFromParent }] });
       queryClient.invalidateQueries({ queryKey: ['playlist-detail', playlistIdFromParent] });
-
       console.log('성공');
     },
   });

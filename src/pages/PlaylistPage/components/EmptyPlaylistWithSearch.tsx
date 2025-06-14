@@ -26,6 +26,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     },
   },
 }));
+
 const SearchContainer = styled(Box)({
   // 스크롤 디자인
   padding: '16px',
@@ -39,6 +40,7 @@ const SearchContainer = styled(Box)({
   msOverflowStyle: 'none', // IE and Edge
   scrollbarWidth: 'none', // Firefox
 });
+
 const EmptyPlaylistWithSearch = () => {
   const [keyword, setKeyword] = useState<string>('');
   // 무한스크롤을 위해 nextpage 관련 추가
