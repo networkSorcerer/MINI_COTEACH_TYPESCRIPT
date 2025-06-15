@@ -10,7 +10,7 @@ interface CardProps {
 
 const Card = ({ image, name, artistName }: CardProps) => {
   return (
-    <Box
+        <Box
       sx={{
         display: "flex",
         position: "relative",
