@@ -31,7 +31,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 const SearchContainer = styled(Box)({
   padding: "16px",
   width: "100%",
-  height: "60%",
+  height: "auto",
   overflow: "auto",
   "&::-webkit-scrollbar": {
     display: "none",
@@ -104,9 +104,8 @@ const SearchPage = () => {
             <div>{`No Result for "${keyword}"`}</div>
           )}
         </div>
+        <MusicCategories />
       </SearchContainer>
-      야 왜 아무것도 안나와
-      <MusicCategories />
     </>
   );
 };
