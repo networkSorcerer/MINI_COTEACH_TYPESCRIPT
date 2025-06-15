@@ -6,7 +6,7 @@ import { SimplifiedAudioBook } from './track';
 
 export const enum SEARCH_TYPE {
   Track = 'track',
-  Album = 'album',
+   Album = 'album',
   Playlist = 'playlist',
   Show = 'show',
   Episode = 'episode',

@@ -1,5 +1,6 @@
-import { ApiResponse } from './apiResponse';
-import { ExternalUrls, Followers, Image, Owner } from './commonType';
+import { ApiResponse } from "./apiResponse";
+import { Artist } from "./artist";
+import { ExternalUrls, Followers, Image, Owner } from "./commonType";
 
 export interface GetCurrentUserPlaylistRequest {
   limit?: number;
@@ -38,7 +39,7 @@ export interface BasePlaylist {
   owner: Owner;
   public?: boolean;
   snapshot_id?: string;
-  type?: 'playlist';
+  type?: "playlist";
   url?: string;
 }
 
@@ -55,7 +56,8 @@ export interface PlaylistTrack {
   is_local?: boolean;
   track: Track | Episode;
 }
-export type RestrictionReason = 'market' | 'product' | 'explicit';
+export type RestrictionReason = "market" | "product" | "explicit";
+
 export interface Track {
   album?: {
     album_type: string;
@@ -109,7 +111,7 @@ export interface Track {
   popularity?: BigInteger;
   preview_url?: string | null;
   track_number?: BigInteger;
-  type?: 'track';
+  type?: "track";
   uri?: string;
   is_local?: boolean;
 }
@@ -135,7 +137,7 @@ export interface Episode {
     fully_played?: boolean;
     resume_position_ms?: BigInteger;
   };
-  type: 'episode';
+  type: "episode";
   uri: string;
   restrictions?: {
     reason: string;
@@ -158,7 +160,7 @@ export interface Episode {
     media_type: string;
     name: string;
     publisher: string;
-    type: 'show';
+    type: "show";
     uri: string;
     total_episodes: BigInteger;
   };
@@ -178,7 +180,7 @@ export interface CreatePlaylistRequest {
   description?: string;
 }
 
-export type SimplifiedEpisode = Omit<Episode, 'show'>;
+export type SimplifiedEpisode = Omit<Episode, "show">;
 
 export interface AddMusicToPlaylistItems {
   uris?: string[];
@@ -187,4 +189,9 @@ export interface AddMusicToPlaylistItems {
 
 export interface AddMusicToPlaylistItemsRes {
   snapshot_id?: string;
+}
+
+export interface SearchResponse {
+  tracks: Track[];
+  artists: Artist
 }

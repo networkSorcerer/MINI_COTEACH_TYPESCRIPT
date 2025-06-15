@@ -7,6 +7,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import SearchResultPage from "./SearchResultPage";
 import { styled } from "@mui/material/styles"; // ★ 꼭 필요
 import MusicCategories from "./component/MusicCategories";
+import TopResult from "./component/TopResult";
+import Songs from "./component/Songs";
+import Artists from "./component/Artists";
+import Albums from "./component/Albums";
+import { useNavigate } from "react-router-dom";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   width: "100%",
@@ -28,7 +33,27 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const SearchContainer = styled(Box)({
+const SearchContainer = styled(Box)(({ theme }) => ({
+  padding: "16px",
+  width: "100%",
+
+  flex: 1, // flex 컨테이너의 아이템일 경우 남은 공간을 채움
+  minHeight: 0, // flex item일 때 스크롤이 제대로 동작하도록
+  overflowY: "auto", // Y축으로 스크롤바 표시
+  overflowX: "hidden", // X축 스크롤바는 숨김 (대부분의 경우 필요 없음)
+
+  // 웹킷 기반 브라우저(Chrome, Safari 등)의 스크롤바 숨김
+  "&::-webkit-scrollbar": {
+    display: "none",
+  },
+  // IE, Edge의 스크롤바 숨김
+  msOverflowStyle: "none",
+  // Firefox의 스크롤바 숨김 (scrollbar-width는 auto, thin, none 가능)
+  scrollbarWidth: "none",
+}));
+
+const ResultContainer = styled("div")({
+  display: "flex",
   padding: "16px",
   width: "100%",
   height: "auto",
@@ -42,7 +67,7 @@ const SearchContainer = styled(Box)({
 
 const SearchPage = () => {
   const [keyword, setKeyword] = useState<string>("");
-
+  const navigate = useNavigate();
   const {
     data,
     error,
@@ -52,15 +77,27 @@ const SearchPage = () => {
     fetchNextPage,
   } = useSearchItemsByKeyword({
     q: keyword,
-    type: [SEARCH_TYPE.Track],
+    type: [SEARCH_TYPE.Track, SEARCH_TYPE.Album, SEARCH_TYPE.Artist],
   });
-
+  console.log("search", data);
   const tracks = data?.pages.flatMap((page) => page.tracks?.items) ?? [];
-
+  const artists = data?.pages.flatMap((page) => page.artists?.items) ?? [];
+  const albums = data?.pages.flatMap((page) => page.albums?.items) ?? [];
+  console.log("tracks", tracks);
+  console.log("artists", artists);
+  console.log("albums", albums);
   const hasResults = tracks.length > 0;
 
   const handleSearchKeyword = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(event.target.value);
+    const newKeyword = event.target.value; // ★ 이벤트에서 최신 값 가져옴
+    setKeyword(newKeyword); // 상태 업데이트 (이건 그냥 두어도 됨)
+
+    if (newKeyword.trim() !== "") {
+      // ★ 최신 값 사용
+      navigate(`/search/${newKeyword}`); // ★ 최신 값 사용
+    } else {
+      navigate(`/search`);
+    }
   };
 
   return (
@@ -92,19 +129,25 @@ const SearchPage = () => {
           {isLoading ? (
             <LoadingScreen />
           ) : hasResults ? (
-            <SearchResultPage
-              list={tracks}
-              hasNextPage={hasNextPage}
-              isFetchingNextPage={isFetchingNextPage}
-              fetchNextPage={fetchNextPage}
-            />
+            <ResultContainer>
+              <TopResult list={tracks} />
+              <SearchResultPage
+                list={tracks}
+                hasNextPage={hasNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+                fetchNextPage={fetchNextPage}
+              />
+              {/* <Artists list={artists} />
+              <Albums list={albums} /> */}
+            </ResultContainer>
           ) : keyword === "" ? (
-            <></>
+            <>
+              <MusicCategories />
+            </>
           ) : (
             <div>{`No Result for "${keyword}"`}</div>
           )}
         </div>
-        <MusicCategories />
       </SearchContainer>
     </>
   );

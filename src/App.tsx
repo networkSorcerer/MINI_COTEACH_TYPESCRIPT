@@ -1,15 +1,16 @@
-import React, { Suspense, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import SearchWithKeywordPage from './pages/SearchPage/SearchWithKeywordPage';
-import PlaylistDetailPage from './pages/PlaylistPage/PlaylistDetailPage';
-import PlaylistPage from './pages/PlaylistPage/PlaylistPage';
-import LoadingScreen from './common/components/LoadingScreen';
-import './App.css';
-import CallbackPage from './common/components/CallbackPage';
-import useExchangeToken from './hooks/useExchangeToken';
-const AppLayout = React.lazy(() => import('./layout/AppLayout'));
-const HomePage = React.lazy(() => import('./pages/HomePage/HopePage'));
-const SearchPage = React.lazy(() => import('./pages/SearchPage/SearchPage'));
+import React, { Suspense, useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import SearchWithKeywordPage from "./pages/SearchPage/SearchWithKeywordPage";
+import PlaylistDetailPage from "./pages/PlaylistPage/PlaylistDetailPage";
+import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
+import LoadingScreen from "./common/components/LoadingScreen";
+import "./App.css";
+import CallbackPage from "./common/components/CallbackPage";
+import useExchangeToken from "./hooks/useExchangeToken";
+import SearchResultPage from "./pages/SearchPage/SearchResultPage";
+const AppLayout = React.lazy(() => import("./layout/AppLayout"));
+const HomePage = React.lazy(() => import("./pages/HomePage/HopePage"));
+const SearchPage = React.lazy(() => import("./pages/SearchPage/SearchPage"));
 // 0. 사이드바 있어야 함 (플레이리스트, 메뉴뉴)
 // 1. 홈페이지 /
 // 2. 서치페이지 /search
@@ -19,8 +20,8 @@ const SearchPage = React.lazy(() => import('./pages/SearchPage/SearchPage'));
 
 function App() {
   const urlParams = new URLSearchParams(window.location.search);
-  let code = urlParams.get('code');
-  let codeVerifier = localStorage.getItem('code_verifier');
+  let code = urlParams.get("code");
+  let codeVerifier = localStorage.getItem("code_verifier");
   const { mutate: exchangeToken } = useExchangeToken();
   useEffect(() => {
     if (code && codeVerifier) {
@@ -32,8 +33,10 @@ function App() {
       <Routes>
         <Route path="/" element={<AppLayout />}>
           <Route index element={<HomePage />}></Route>
-          <Route path="search" element={<SearchPage />}></Route>
-          <Route path="search/:keyword" element={<SearchWithKeywordPage />}></Route>
+          <Route path="search" element={<SearchPage />}>
+            <Route index element={<SearchResultPage />} />
+            <Route path=":keyword" element={<SearchResultPage />} />
+          </Route>
           <Route path="playlist/:id" element={<PlaylistDetailPage />}></Route>
           <Route path="playlist" element={<PlaylistPage />}></Route>
         </Route>
