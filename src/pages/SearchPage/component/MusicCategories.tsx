@@ -1,4 +1,3 @@
-import React from "react";
 import useGetMusicCategries from "../../../hooks/useGetMusicCategries";
 import LoadingScreen from "../../../common/components/LoadingScreen";
 import { Typography } from "@mui/material";
@@ -15,7 +14,7 @@ const MusicCategories = () => {
   }
   return (
     <Typography variant="h1" padding="8px">
-      Music Categories
+      Browse all
     </Typography>
     // {data&& data.albums.items.length > 0}
   );
