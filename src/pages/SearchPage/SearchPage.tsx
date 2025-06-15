@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import useSearchItemsByKeyword from "../../hooks/useSearchItemsByKeyword";
 import { SEARCH_TYPE } from "../../models/search";
-import { Box, Grid, InputAdornment, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Grid,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
 import LoadingScreen from "../../common/components/LoadingScreen";
 import SearchIcon from "@mui/icons-material/Search";
 import SearchResultPage from "./SearchResultPage";
@@ -12,6 +18,7 @@ import Songs from "./component/Songs";
 import Artists from "./component/Artists";
 import Albums from "./component/Albums";
 import { useNavigate } from "react-router-dom";
+import { SpatialTrackingSharp } from "@mui/icons-material";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   width: "100%",
@@ -52,7 +59,7 @@ const SearchContainer = styled(Box)(({ theme }) => ({
   scrollbarWidth: "none",
 }));
 
-const ResultContainer = styled(Grid)({
+const ResultContainer = styled(Grid)(({ theme }) => ({
   display: "flex",
   padding: "16px",
   width: "100%",
@@ -63,7 +70,8 @@ const ResultContainer = styled(Grid)({
   },
   msOverflowStyle: "none",
   scrollbarWidth: "none",
-});
+  marginBottom: theme.spacing(4),
+}));
 
 const SearchPage = () => {
   const [keyword, setKeyword] = useState<string>("");
@@ -130,14 +138,13 @@ const SearchPage = () => {
             <LoadingScreen />
           ) : hasResults ? (
             <>
-              <ResultContainer>
-                <TopResult list={tracks} />
-                <SearchResultPage
-                  list={tracks}
-                  hasNextPage={hasNextPage}
-                  isFetchingNextPage={isFetchingNextPage}
-                  fetchNextPage={fetchNextPage}
-                />
+              <ResultContainer container spacing={3}>
+                <Grid item xs={12} md={5}>
+                  <TopResult list={tracks} />
+                </Grid>
+                <Grid item xs={12} md={7}>
+                  <SearchResultPage list={tracks} />
+                </Grid>
               </ResultContainer>
               <Artists list={artists} />
               <Albums list={albums} />
