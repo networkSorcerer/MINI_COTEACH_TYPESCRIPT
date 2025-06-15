@@ -14,11 +14,9 @@ import SearchResultPage from "./SearchResultPage";
 import { styled } from "@mui/material/styles"; // ★ 꼭 필요
 import MusicCategories from "./component/MusicCategories";
 import TopResult from "./component/TopResult";
-import Songs from "./component/Songs";
 import Artists from "./component/Artists";
 import Albums from "./component/Albums";
 import { useNavigate } from "react-router-dom";
-import { SpatialTrackingSharp } from "@mui/icons-material";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   width: "100%",

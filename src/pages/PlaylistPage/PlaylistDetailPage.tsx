@@ -103,7 +103,7 @@ const PlaylistDetailPage = () => {
 
   const { ref: sentinelRef, inView } = useInView({
     root: containerRef.current,
-    threshold: 0, // 마지막 row가 완전히 보여야 트리거
+    threshold: 0, 
   });
 
   useEffect(() => {

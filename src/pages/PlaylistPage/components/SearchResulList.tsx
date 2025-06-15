@@ -1,35 +1,44 @@
-import { useInView } from 'react-intersection-observer';
-import { Box, Button, styled, TableBody, TableCell, TableContainer, TableRow, Typography } from '@mui/material';
-import { useEffect } from 'react';
-import { Track } from '../../../models/playlist';
-import LoadingScreen from '../../../common/components/LoadingScreen';
-import useGetCurrentUserProfile from '../../../hooks/useGetCurrentUserProfile';
-import { getSpotifyAuthUrl } from '../../../utils/auth';
-import useAddMusicToPlaylist from '../../../hooks/useAddMusicToPlaylist';
-import { useParams } from 'react-router-dom';
+import { useInView } from "react-intersection-observer";
+import {
+  Box,
+  Button,
+  styled,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Typography,
+} from "@mui/material";
+import { useEffect } from "react";
+import { Track } from "../../../models/playlist";
+import LoadingScreen from "../../../common/components/LoadingScreen";
+import useGetCurrentUserProfile from "../../../hooks/useGetCurrentUserProfile";
+import { getSpotifyAuthUrl } from "../../../utils/auth";
+import useAddMusicToPlaylist from "../../../hooks/useAddMusicToPlaylist";
+import { useParams } from "react-router-dom";
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   background: theme.palette.background.paper,
   color: theme.palette.common.white,
-  width: '100%',
-  '&::-webkit-scrollbar': {
-    display: 'none',
+  width: "100%",
+  "&::-webkit-scrollbar": {
+    display: "none",
   },
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  width: '100%',
-  '&:hover': {
+  width: "100%",
+  "&:hover": {
     backgroundColor: theme.palette.action.hover,
   },
-  '& .MuiTableCell-root': {
-    borderBottom: 'none',
+  "& .MuiTableCell-root": {
+    borderBottom: "none",
   },
 }));
 
-const AlbumImage = styled('img')({
-  borderRadius: '4px',
-  marginRight: '12px',
+const AlbumImage = styled("img")({
+  borderRadius: "4px",
+  marginRight: "12px",
 });
 
 interface SearchResultListProps {
@@ -58,7 +67,7 @@ const SearchResultList = ({
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const handleAddMusic = (trackUri: string) => {
-    console.log('trackUri', trackUri);
+    console.log("trackUri", trackUri);
     if (userProfile) {
       addMusicToPlaylist({
         uris: [trackUri],
@@ -71,16 +80,20 @@ const SearchResultList = ({
 
   return (
     <StyledTableContainer>
-      <TableBody sx={{ width: '100%' }}>
+      <TableBody sx={{ width: "100%" }}>
         {list.map((track) => (
           <StyledTableRow key={track.id}>
             <TableCell>
               <Box display="flex" alignItems="center">
-                <AlbumImage src={track.album?.images[0]?.url || ''} width="40px" alt="album cover" />
+                <AlbumImage
+                  src={track.album?.images[0]?.url || ""}
+                  width="40px"
+                  alt="album cover"
+                />
                 <Box>
                   <Typography fontWeight={700}>{track.name}</Typography>
                   <Typography color="text.secondary">
-                    {track.artists ? track.artists[0].name : 'Unknown Artist'}
+                    {track.artists ? track.artists[0].name : "Unknown Artist"}
                   </Typography>
                 </Box>
               </Box>
