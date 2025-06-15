@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import useSearchItemsByKeyword from "../../hooks/useSearchItemsByKeyword";
 import { SEARCH_TYPE } from "../../models/search";
-import { Box, InputAdornment, TextField, Typography } from "@mui/material";
+import { Box, Grid, InputAdornment, TextField, Typography } from "@mui/material";
 import LoadingScreen from "../../common/components/LoadingScreen";
 import SearchIcon from "@mui/icons-material/Search";
 import SearchResultPage from "./SearchResultPage";
@@ -52,7 +52,7 @@ const SearchContainer = styled(Box)(({ theme }) => ({
   scrollbarWidth: "none",
 }));
 
-const ResultContainer = styled("div")({
+const ResultContainer = styled(Grid)({
   display: "flex",
   padding: "16px",
   width: "100%",
@@ -129,17 +129,19 @@ const SearchPage = () => {
           {isLoading ? (
             <LoadingScreen />
           ) : hasResults ? (
-            <ResultContainer>
-              <TopResult list={tracks} />
-              <SearchResultPage
-                list={tracks}
-                hasNextPage={hasNextPage}
-                isFetchingNextPage={isFetchingNextPage}
-                fetchNextPage={fetchNextPage}
-              />
-              {/* <Artists list={artists} />
-              <Albums list={albums} /> */}
-            </ResultContainer>
+            <>
+              <ResultContainer>
+                <TopResult list={tracks} />
+                <SearchResultPage
+                  list={tracks}
+                  hasNextPage={hasNextPage}
+                  isFetchingNextPage={isFetchingNextPage}
+                  fetchNextPage={fetchNextPage}
+                />
+              </ResultContainer>
+              <Artists list={artists} />
+              <Albums list={albums} />
+            </>
           ) : keyword === "" ? (
             <>
               <MusicCategories />

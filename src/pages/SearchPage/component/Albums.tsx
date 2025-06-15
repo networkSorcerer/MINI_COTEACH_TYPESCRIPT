@@ -8,17 +8,17 @@ import { Track } from "../../../models/playlist";
 // interface Album { id: string; name: string; images: { url: string }[]; artists: { name: string }[]; /* ... */ }
 
 interface AlbumsProps {
-  albums: Track[]; // Album[] 타입으로 교체 필요
+  list: Track[]; // Album[] 타입으로 교체 필요
 }
 
-const Albums = ({ albums }: AlbumsProps) => {
+const Albums = ({ list }: AlbumsProps) => {
   return (
     <Box sx={{ mb: 4 }}>
       <Typography variant="h5" sx={{ mb: 2 }}>
         Albums
       </Typography>
       <Grid2 container spacing={2}>
-        {albums.map((album) => (
+        {list.map((album) => (
           <Grid2 xs={6} sm={4} md={2} key={album.id}>
             <CategoryCard
               href={album.href} // 앨범 상세 페이지 링크

@@ -7,17 +7,17 @@ import { Track } from "../../../models/playlist";
 // interface Artist { id: string; name: string; images: { url: string }[]; /* ... */ }
 
 interface ArtistsProps {
-  artists: Track[]; // Artist[] 타입으로 교체 필요
+  list: Track[]; // Artist[] 타입으로 교체 필요
 }
 
-const Artists = ({ artists }: ArtistsProps) => {
+const Artists = ({ list }: ArtistsProps) => {
   return (
-    <Box sx={{ mb: 4 }}>
+    <Box sx={{ mb: 4 }} display="block">
       <Typography variant="h5" sx={{ mb: 2 }}>
         Artists
       </Typography>
       <Grid2 container spacing={2}>
-        {artists.map((artist) => (
+        {list.map((artist) => (
           <Grid2 xs={4} sm={3} md={2} key={artist.id}>
             <Box
               sx={{

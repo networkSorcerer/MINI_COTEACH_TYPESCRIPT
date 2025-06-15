@@ -5,3 +5,12 @@ body {
   overflow-x: hidden;
   height: 100%;
 }
+/* App.css (또는 index.css, global.css 등) */
+html {
+  box-sizing: border-box; /* HTML 요소부터 box-sizing 적용 시작 */
+}
+*,
+*::before,
+*::after {
+  box-sizing: inherit; /* 모든 요소가 부모로부터 box-sizing을 상속 */
+}
