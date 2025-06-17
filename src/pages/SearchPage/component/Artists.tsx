@@ -1,13 +1,17 @@
-import React from "react";
-import { Box, Typography, Avatar } from "@mui/material";
-import Grid2 from "@mui/material/Unstable_Grid2"; // Grid2 임포트
-import { Track } from "../../../models/playlist";
+import React from 'react';
+import { Box, Typography, Avatar, IconButton } from '@mui/material';
+import Grid2 from '@mui/material/Unstable_Grid2';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
-// Artist 타입 정의가 필요합니다.
-// interface Artist { id: string; name: string; images: { url: string }[]; /* ... */ }
+// Artist 타입 정의
+interface Artist {
+  id: string;
+  name: string;
+  images: { url: string }[];
+}
 
 interface ArtistsProps {
-  list: Track[]; // Artist[] 타입으로 교체 필요
+  list: Artist[];
 }
 
 const Artists = ({ list }: ArtistsProps) => {
@@ -21,26 +25,47 @@ const Artists = ({ list }: ArtistsProps) => {
           <Grid2 xs={4} sm={3} md={2} key={artist.id}>
             <Box
               sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                textAlign: "center",
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                '&:hover .play-button': {
+                  transform: 'translate(-50%, -50%) scale(1.1)',
+                  opacity: 1,
+                },
               }}
             >
               <Avatar
-                src={artist.images[0]?.url || "placeholder-artist.png"}
+                src={artist.images[0]?.url || 'placeholder-artist.png'}
                 alt={artist.name}
                 sx={{
                   width: 100,
                   height: 100,
                   mb: 1,
-                  border: "1px solid grey",
-                }} // 아티스트 이미지는 보통 원형이므로 border-radius 적용
+                  border: '1px solid grey',
+                }}
               />
               <Typography variant="subtitle1">{artist.name}</Typography>
               <Typography variant="body2" color="text.secondary">
                 Artist
               </Typography>
+              <IconButton
+                className="play-button"
+                sx={{
+                  position: 'absolute',
+                  top: '70%',
+                  left: '70%',
+                  transform: 'translate(-50%, -50%) scale(0)',
+                  bgcolor: 'rgba(0, 128, 0, 0.8)',
+                  color: 'white',
+                  opacity: 0,
+                  transition: 'all 0.3s ease',
+                }}
+                aria-label="play"
+              >
+                <PlayArrowIcon fontSize="large" />
+              </IconButton>
             </Box>
           </Grid2>
         ))}

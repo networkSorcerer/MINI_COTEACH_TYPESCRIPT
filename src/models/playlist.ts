@@ -197,5 +197,5 @@ export interface SearchResponse {
 }
 
 export interface Tracks {
-  tracks: Track[];
+  tracks?: Track[];
 }
