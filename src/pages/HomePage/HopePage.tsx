@@ -1,12 +1,14 @@
 import React from 'react';
 import NewReleases from './components/NewReleases';
 import Tracks from './components/Tracks';
+import Albums from './components/Albums';
 
 const HomePage = () => {
   return (
     <div>
       <NewReleases />
       <Tracks />
+      <Albums />
     </div>
   );
 };

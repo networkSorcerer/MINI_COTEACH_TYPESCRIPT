@@ -22,3 +22,7 @@ export interface SimplifiedAlbum {
   uri: string;
   artists: Artist[];
 }
+
+export interface Albums {
+  albums: SimplifiedAlbum[];
+}
