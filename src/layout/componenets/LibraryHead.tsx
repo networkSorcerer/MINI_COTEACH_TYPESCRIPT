@@ -6,6 +6,7 @@ import theme from '../../theme';
 import useCreatePlaylist from '../../hooks/useCreatePlaylist';
 import useGetCurrentUserProfile from '../../hooks/useGetCurrentUserProfile';
 import { getSpotifyAuthUrl } from '../../utils/auth';
+import { Outlet } from 'react-router-dom';
 
 const LibraryHeadStyle = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -35,6 +36,7 @@ const LibraryHead = () => {
           <AddIcon />
         </Button>
       </LibraryHeadStyle>
+      <Outlet />
     </>
   );
 };

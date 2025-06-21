@@ -9,6 +9,8 @@ import CallbackPage from './common/components/CallbackPage';
 import useExchangeToken from './hooks/useExchangeToken';
 import SearchResultPage from './pages/SearchPage/SearchResultPage';
 import Counter from './redux/counter';
+import Library from './layout/componenets/Library';
+import LibraryHead from './layout/componenets/LibraryHead';
 const AppLayout = React.lazy(() => import('./layout/AppLayout'));
 const HomePage = React.lazy(() => import('./pages/HomePage/HopePage'));
 const SearchPage = React.lazy(() => import('./pages/SearchPage/SearchPage'));
@@ -37,6 +39,10 @@ function App() {
           <Route path="search" element={<SearchPage />}>
             <Route index element={<SearchResultPage />} />
             <Route path=":keyword" element={<SearchResultPage />} />
+          </Route>
+          <Route path="library" element={<LibraryHead />}>
+            <Route index element={<Library />} />
+            <Route path="" element={<Library />} />
           </Route>
           <Route path="playlist/:id" element={<PlaylistDetailPage />}></Route>
           <Route path="playlist" element={<PlaylistPage />}></Route>

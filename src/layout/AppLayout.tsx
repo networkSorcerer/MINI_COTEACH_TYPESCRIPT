@@ -1,4 +1,4 @@
-import { Box, styled, Typography, Button } from '@mui/material';
+import { Box, styled, Typography, Button, useMediaQuery } from '@mui/material';
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
@@ -6,12 +6,15 @@ import SearchIcon from '@mui/icons-material/Search';
 import LibraryHead from './componenets/LibraryHead'; // 경로 확인
 import Navbar from './componenets/Navbar'; // 경로 확인
 import Library from './componenets/Library'; // 경로 확인
+import { useTheme } from '@emotion/react';
+import MobileBottomNav from './componenets/MobileBottomNav';
 
 // theme 임포트는 AppLayout 밖에서 또는 App.js/tsx에서 <ThemeProvider>로 감싸주세요.
 // styled 컴포넌트 내부에서 theme에 접근하려면 (theme) => ({ ... }) 형식으로 사용해야 합니다.
 
 // --- 1. 최상위 레이아웃 컨테이너 ---
-const AppRootLayout = styled(Box)({ // 이름을 Layout에서 AppRootLayout으로 변경
+const AppRootLayout = styled(Box)({
+  // 이름을 Layout에서 AppRootLayout으로 변경
   display: 'flex', // 사이드바와 메인 콘텐츠를 가로로 배치
   height: '100vh', // 뷰포트 전체 높이 차지 (padding은 box-sizing 덕분에 포함됨)
   // padding은 이제 각 내부 컴포넌트 (SidebarContainer, MainContentArea)에서 관리하는 것이 더 좋음
@@ -19,7 +22,8 @@ const AppRootLayout = styled(Box)({ // 이름을 Layout에서 AppRootLayout으�
 });
 
 // --- 2. 사이드바 컨테이너 ---
-const SidebarContainer = styled(Box)(({ theme }) => ({ // 이름을 Sidebar에서 SidebarContainer로 변경 (Box 기반)
+const SidebarContainer = styled(Box)(({ theme }) => ({
+  // 이름을 Sidebar에서 SidebarContainer로 변경 (Box 기반)
   width: '320px',
   height: '100%', // 부모(AppRootLayout)의 높이 100% 차지
   display: 'flex',
@@ -50,13 +54,12 @@ const ScrollableOutletWrapper = styled(Box)({
   overflowX: 'hidden', // 수평 스크롤바 숨김
 
   // 스크롤바 숨김 스타일
-  "&::-webkit-scrollbar": {
-    display: "none",
+  '&::-webkit-scrollbar': {
+    display: 'none',
   },
-  msOverflowStyle: "none", // IE, Edge
-  scrollbarWidth: "none", // Firefox
+  msOverflowStyle: 'none', // IE, Edge
+  scrollbarWidth: 'none', // Firefox
 });
-
 
 // --- 기존 Sidebar 내부 컴포넌트 스타일은 그대로 유지 ---
 const ContentBox = styled(Box)(({ theme }) => ({
@@ -104,47 +107,72 @@ const LibraryBox = styled(Box)(({ theme }) => ({
   overflow: 'hidden', // LibraryBox 내부에서 다시 스크롤이 필요하면 이 안에 또 다른 overflow:auto Box 필요
 }));
 
-
 const AppLayout = () => {
   const navigate = useNavigate();
-
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   return (
-    <AppRootLayout> {/* 뷰포트 전체를 차지 */}
-      <SidebarContainer> {/* 사이드바 영역 */}
-        <ContentBox> {/* Home, Search 링크 컨테이너 */}
-          <NavList>
-            <li> {/* ul > li > a 구조가 일반적 */}
-              <StyledNavLink to="/">
-                <HomeIcon />
-                <Typography onClick={() => navigate('/')} variant="h2" fontWeight={700}>
-                  Home
-                </Typography>
-              </StyledNavLink>
-            </li>
-            <li>
-              <StyledNavLink to="/search">
-                <SearchIcon />
-                <Typography onClick={() => navigate('/search')} variant="h2" fontWeight={700}>
-                  Search
-                </Typography>
-              </StyledNavLink>
-            </li>
-          </NavList>
-        </ContentBox>
-        <LibraryBox> {/* 라이브러리 영역 */}
-          <LibraryHead />
-          {/* Library 컴포넌트 내부에 실제 스크롤되는 목록이 있다면, Library 내부에서 overflow: auto 처리 */}
-          <Library />
-        </LibraryBox>
-      </SidebarContainer>
+    <>
+      {!isMobile && (
+        <AppRootLayout>
+          {/* 뷰포트 전체를 차지 */}
+          <SidebarContainer>
+            {/* 사이드바 영역 */}
+            <ContentBox>
+              {/* Home, Search 링크 컨테이너 */}
+              <NavList>
+                <li>
+                  {/* ul > li > a 구조 */}
+                  <StyledNavLink to="/">
+                    <HomeIcon />
+                    <Typography onClick={() => navigate('/')} variant="h2" fontWeight={700}>
+                      Home
+                    </Typography>
+                  </StyledNavLink>
+                </li>
+                <li>
+                  <StyledNavLink to="/search">
+                    <SearchIcon />
+                    <Typography onClick={() => navigate('/search')} variant="h2" fontWeight={700}>
+                      Search
+                    </Typography>
+                  </StyledNavLink>
+                </li>
+              </NavList>
+            </ContentBox>
+            <LibraryBox>
+              {/* 라이브러리 영역 */}
+              <LibraryHead />
+              {/* Library 내부에 스크롤 처리 */}
+              <Library />
+            </LibraryBox>
+          </SidebarContainer>
 
-      <MainContentArea> {/* 메인 콘텐츠 영역 (사이드바 옆) */}
-        <Navbar /> {/* 상단 내비게이션 바 (고정될 수 있음) */}
-        <ScrollableOutletWrapper> {/* 실제 페이지 내용이 렌더링되고 스크롤될 영역 */}
-          <Outlet />
-        </ScrollableOutletWrapper>
-      </MainContentArea>
-    </AppRootLayout>
+          <MainContentArea>
+            {/* 메인 콘텐츠 영역 (사이드바 옆) */}
+            <Navbar /> {/* 상단 내비게이션 바 (고정 가능) */}
+            <ScrollableOutletWrapper>
+              {/* 실제 페이지 내용이 렌더링되고 스크롤될 영역 */}
+              <Outlet />
+            </ScrollableOutletWrapper>
+          </MainContentArea>
+        </AppRootLayout>
+      )}
+
+      {isMobile && (
+        <AppRootLayout>
+          <MainContentArea>
+            {/* 메인 콘텐츠 영역 (사이드바 옆) */}
+            <Navbar /> {/* 상단 내비게이션 바 (고정 가능) */}
+            <ScrollableOutletWrapper>
+              {/* 실제 페이지 내용이 렌더링되고 스크롤될 영역 */}
+              <Outlet />
+            </ScrollableOutletWrapper>
+          </MainContentArea>
+          <MobileBottomNav />
+        </AppRootLayout>
+      )}
+    </>
   );
 };
 
