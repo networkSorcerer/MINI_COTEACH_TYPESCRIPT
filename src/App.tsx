@@ -43,17 +43,17 @@ function App() {
           <Route path="playlist/:id" element={<PlaylistDetailPage />}></Route>
           <Route path="playlist" element={<PlaylistPage />}></Route>
           <Route path="count" element={<Counter />}></Route>
+          <Route
+            path="/library"
+            element={
+              <>
+                <LibraryHead />
+                <Library />
+              </>
+            }
+          />
+          {/* <Route path="/callback" element={<CallbackPage />} /> */}
         </Route>
-        <Route
-          path="/library"
-          element={
-            <>
-              <LibraryHead />
-              <Library />
-            </>
-          }
-        />
-        {/* <Route path="/callback" element={<CallbackPage />} /> */}
       </Routes>
     </Suspense>
   );
