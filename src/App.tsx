@@ -40,14 +40,19 @@ function App() {
             <Route index element={<SearchResultPage />} />
             <Route path=":keyword" element={<SearchResultPage />} />
           </Route>
-          <Route path="library" element={<LibraryHead />}>
-            <Route index element={<Library />} />
-            <Route path="" element={<Library />} />
-          </Route>
           <Route path="playlist/:id" element={<PlaylistDetailPage />}></Route>
           <Route path="playlist" element={<PlaylistPage />}></Route>
           <Route path="count" element={<Counter />}></Route>
         </Route>
+        <Route
+          path="/library"
+          element={
+            <>
+              <LibraryHead />
+              <Library />
+            </>
+          }
+        />
         {/* <Route path="/callback" element={<CallbackPage />} /> */}
       </Routes>
     </Suspense>

@@ -1,4 +1,4 @@
-import { Box, styled, Typography, Button, useMediaQuery } from '@mui/material';
+import { Box, styled, Typography, Button, useTheme, useMediaQuery } from '@mui/material';
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
@@ -6,7 +6,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import LibraryHead from './componenets/LibraryHead'; // 경로 확인
 import Navbar from './componenets/Navbar'; // 경로 확인
 import Library from './componenets/Library'; // 경로 확인
-import { useTheme } from '@emotion/react';
 import MobileBottomNav from './componenets/MobileBottomNav';
 
 // theme 임포트는 AppLayout 밖에서 또는 App.js/tsx에서 <ThemeProvider>로 감싸주세요.
@@ -111,69 +110,47 @@ const AppLayout = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
-    <>
+    <AppRootLayout>
       {!isMobile && (
-        <AppRootLayout>
-          {/* 뷰포트 전체를 차지 */}
-          <SidebarContainer>
-            {/* 사이드바 영역 */}
-            <ContentBox>
-              {/* Home, Search 링크 컨테이너 */}
-              <NavList>
-                <li>
-                  {/* ul > li > a 구조 */}
-                  <StyledNavLink to="/">
-                    <HomeIcon />
-                    <Typography onClick={() => navigate('/')} variant="h2" fontWeight={700}>
-                      Home
-                    </Typography>
-                  </StyledNavLink>
-                </li>
-                <li>
-                  <StyledNavLink to="/search">
-                    <SearchIcon />
-                    <Typography onClick={() => navigate('/search')} variant="h2" fontWeight={700}>
-                      Search
-                    </Typography>
-                  </StyledNavLink>
-                </li>
-              </NavList>
-            </ContentBox>
-            <LibraryBox>
-              {/* 라이브러리 영역 */}
-              <LibraryHead />
-              {/* Library 내부에 스크롤 처리 */}
-              <Library />
-            </LibraryBox>
-          </SidebarContainer>
-
-          <MainContentArea>
-            {/* 메인 콘텐츠 영역 (사이드바 옆) */}
-            <Navbar /> {/* 상단 내비게이션 바 (고정 가능) */}
-            <ScrollableOutletWrapper>
-              {/* 실제 페이지 내용이 렌더링되고 스크롤될 영역 */}
-              <Outlet />
-            </ScrollableOutletWrapper>
-          </MainContentArea>
-        </AppRootLayout>
+        <SidebarContainer>
+          <ContentBox>
+            <NavList>
+              <li>
+                <StyledNavLink to="/">
+                  <HomeIcon />
+                  <Typography onClick={() => navigate('/')} variant="h2" fontWeight={700}>
+                    Home
+                  </Typography>
+                </StyledNavLink>
+              </li>
+              <li>
+                <StyledNavLink to="/search">
+                  <SearchIcon />
+                  <Typography onClick={() => navigate('/search')} variant="h2" fontWeight={700}>
+                    Search
+                  </Typography>
+                </StyledNavLink>
+              </li>
+            </NavList>
+          </ContentBox>
+          <LibraryBox>
+            <LibraryHead />
+            <Library />
+          </LibraryBox>
+        </SidebarContainer>
       )}
 
-      {isMobile && (
-        <AppRootLayout>
-          <MainContentArea>
-            {/* 메인 콘텐츠 영역 (사이드바 옆) */}
-            <Navbar /> {/* 상단 내비게이션 바 (고정 가능) */}
-            <ScrollableOutletWrapper>
-              {/* 실제 페이지 내용이 렌더링되고 스크롤될 영역 */}
-              <Outlet />
-            </ScrollableOutletWrapper>
-          </MainContentArea>
-          <MobileBottomNav />
-        </AppRootLayout>
-      )}
-    </>
+      <MainContentArea>
+        <Navbar />
+        <ScrollableOutletWrapper>
+          <Outlet />
+        </ScrollableOutletWrapper>
+      </MainContentArea>
+
+      {isMobile && <MobileBottomNav />}
+    </AppRootLayout>
   );
 };
-
 export default AppLayout;

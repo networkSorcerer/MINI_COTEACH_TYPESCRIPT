@@ -36,7 +36,6 @@ const LibraryHead = () => {
           <AddIcon />
         </Button>
       </LibraryHeadStyle>
-      <Outlet />
     </>
   );
 };

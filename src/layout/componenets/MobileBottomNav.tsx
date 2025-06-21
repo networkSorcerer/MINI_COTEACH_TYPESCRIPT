@@ -4,6 +4,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import LibraryMusicIcon from '@mui/icons-material/LibraryMusic'; // 라이브러리 아이콘 예시
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
+import LibraryHead from './LibraryHead';
+import Library from './Library';
 
 const MobileBottomNav = () => {
   const navigate = useNavigate();
@@ -17,7 +19,7 @@ const MobileBottomNav = () => {
         setValue(newValue);
         if (newValue === 0) navigate('/');
         else if (newValue === 1) navigate('/search');
-        else if (newValue === 2) navigate('/library');
+        else if (newValue === 2) navigate('/library'); // 여기서 /library로 이동
       }}
       sx={{
         position: 'fixed',
