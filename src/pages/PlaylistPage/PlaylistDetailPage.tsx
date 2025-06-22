@@ -13,6 +13,8 @@ import {
   TableHead,
   TableRow,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import DefaultImage from "../../layout/componenets/DefaultImage";
 import useGetPlaylistItems from "../../hooks/useGetPlaylistItems";
@@ -99,11 +101,13 @@ const ResponsiveTypography = styled(Typography)(({ theme }) => ({
 }));
 
 const PlaylistDetailPage = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const { ref: sentinelRef, inView } = useInView({
     root: containerRef.current,
-    threshold: 0, 
+    threshold: 0,
   });
 
   useEffect(() => {
@@ -203,15 +207,17 @@ const PlaylistDetailPage = () => {
           <EmptyPlaylistWithSearch></EmptyPlaylistWithSearch>
         ) : (
           <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>#</TableCell>
-                <TableCell>Title</TableCell>
-                <TableCell>Album</TableCell>
-                <TableCell>Date added</TableCell>
-                <TableCell>Duration</TableCell>
-              </TableRow>
-            </TableHead>
+            {!isMobile && (
+              <TableHead>
+                <TableRow>
+                  <TableCell>#</TableCell>
+                  <TableCell>Title</TableCell>
+                  <TableCell>Album</TableCell>
+                  <TableCell>Date added</TableCell>
+                  <TableCell>Duration</TableCell>
+                </TableRow>
+              </TableHead>
+            )}
             <TableBody>
               {playlistItems?.pages.map((page, pageIndex) =>
                 page.items.map((item, itemIndex) => (
